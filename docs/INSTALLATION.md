@@ -105,7 +105,7 @@ curl -fsSL https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/
 
 | Plataforma | Aplicación | Comando |
 |---|---|---|
-| Termux | `~/.local/share/spaceflow` | `~/.local/bin/spaceflow` |
+| Termux | `~/.local/share/spaceflow` | `$PREFIX/bin/spaceflow` |
 | a-Shell | `~/Documents/.spaceflow/app` | `~/Documents/bin/spaceflow` |
 | iSH como root | `/root/.local/share/spaceflow` | `/usr/local/bin/spaceflow` |
 | Windows | `%LOCALAPPDATA%\SpaceFlow` | `%LOCALAPPDATA%\SpaceFlow\bin\spaceflow.cmd` |

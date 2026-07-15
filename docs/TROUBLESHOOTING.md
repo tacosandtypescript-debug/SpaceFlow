@@ -2,8 +2,16 @@
 
 ## `spaceflow: not found`
 
-Cierra y vuelve a abrir la terminal para recargar el PATH. También puedes
-ejecutar de nuevo el instalador; es incremental y no reinstala todo sin motivo.
+Actualiza ejecutando de nuevo el instalador. Desde SpaceFlow 0.1.11, Termux crea
+el comando directamente en `$PREFIX/bin` y queda disponible sin reiniciar:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/main/scripts/install.sh | sh
+spaceflow --version
+```
+
+En instalaciones antiguas también puedes cerrar y volver a abrir la terminal
+para recargar el PATH.
 
 ## `pkg: not found` en iSH
 

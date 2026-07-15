@@ -43,7 +43,9 @@ elif [ -n "${TERMUX_VERSION:-}" ] || echo "${PREFIX:-}" | grep -q 'com.termux'; 
     else
         echo "Dependencias de Termux ya instaladas; se omite pkg."
     fi
-    BIN_DIR="$HOME/.local/bin"
+    # PREFIX/bin forma parte del PATH de Termux desde la sesión actual.
+    # Usar ~/.local/bin aquí obligaba a reiniciar la terminal después de curl | sh.
+    BIN_DIR="$PREFIX/bin"
 elif { [ -n "${APPNAME:-}" ] && echo "$APPNAME" | grep -qi 'a-shell'; } || \
      { command -v pkg >/dev/null 2>&1 && [ -d "$HOME/Documents" ]; }; then
     PLATFORM="ashell"
