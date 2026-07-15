@@ -4,14 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "spaceflow"
-version = "0.1.0"
-description = "Escucha, descarga y graba X Spaces desde a-Shell, Termux y Windows."
+version = "0.1.1"
+description = "Escucha, descarga y graba X Spaces desde a-Shell, iSH, Termux y Windows."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 authors = [{ name = "tacosandtypescript-debug" }]
 dependencies = ["yt-dlp>=2025.1.15"]
-keywords = ["x-spaces", "twitter-spaces", "audio", "termux", "a-shell"]
+keywords = ["x-spaces", "twitter-spaces", "audio", "termux", "a-shell", "ish", "alpine"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",

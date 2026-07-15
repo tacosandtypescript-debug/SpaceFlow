@@ -2,6 +2,11 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.1] - 2026-07-15
+
+- Instalación compatible con iSH y Alpine mediante `apk` y un entorno Python aislado.
+- Corregida la detección de a-Shell para no confundirla con iSH.
+
 ## [0.1.0] - 2026-07-15
 
 - Primera versión con menú y CLI.

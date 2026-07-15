@@ -1,7 +1,7 @@
 # SpaceFlow
 
 SpaceFlow permite consultar, escuchar, descargar y grabar X Spaces desde
-a-Shell en iPhone/iPad, Termux en Android y Windows. Acepta el enlace directo
+a-Shell o iSH en iPhone/iPad, Termux en Android y Windows. Acepta el enlace directo
 del Space o la publicación de X que contiene el botón **Reproducir grabación**.
 
 > Usa SpaceFlow únicamente para contenido que tengas derecho a escuchar o
@@ -9,20 +9,25 @@ del Space o la publicación de X que contiene el botón **Reproducir grabación*
 
 ## Instalación rápida
 
-### a-Shell y Termux
+### a-Shell, iSH y Termux
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/main/scripts/install.sh | sh
 ```
 
-En Termux conviene ejecutar antes `termux-setup-storage`. En a-Shell, el
-instalador usa `~/Documents/bin`, una ruta apropiada para comandos personales.
+El instalador detecta cada terminal automáticamente. En iSH instala sus
+dependencias con `apk` y aísla Python en un entorno propio. En Termux conviene
+ejecutar antes `termux-setup-storage`. En a-Shell usa `~/Documents/bin`, una
+ruta apropiada para comandos personales.
 
 ### Windows PowerShell
 
 ```powershell
 irm https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/main/scripts/install.ps1 | iex
 ```
+
+Este comando es exclusivamente para Windows PowerShell; en iSH se usa el
+comando `curl` de la sección anterior.
 
 El instalador descarga Python y FFmpeg con `winget` cuando faltan, instala
 `yt-dlp`, descarga `spaceflow.pyz` de la última Release y configura el comando.
