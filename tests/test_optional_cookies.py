@@ -80,6 +80,17 @@ class OptionalCookiesTests(unittest.TestCase):
         )
         self.assertEqual(result, "Operación cancelada antes de terminar.")
 
+    def test_speaker_names_are_recovered_from_twitter_space_metadata(self):
+        info = {
+            "description": "Twitter Space participated by Ana, Bruno",
+        }
+        participants = YtDlpSpaceProvider._participants(info, None)
+        self.assertEqual([item.name for item in participants], ["Ana", "Bruno"])
+
+    def test_nobody_yet_is_not_shown_as_a_speaker(self):
+        info = {"description": "Twitter Space participated by nobody yet"}
+        self.assertEqual(YtDlpSpaceProvider._participants(info, None), [])
+
 
 if __name__ == "__main__":
     unittest.main()

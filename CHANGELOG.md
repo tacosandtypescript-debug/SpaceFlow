@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.7] - 2026-07-15
+
+- Reproducción HLS dentro de Termux mediante `mpv` y OpenSL ES.
+- El instalador añade `mpv` solo cuando no está instalado.
+- Recuperación de nombres de hablantes desde los metadatos públicos entregados por X.
+
 ## [0.1.6] - 2026-07-15
 
 - Menú reorganizado en acciones principales y herramientas.

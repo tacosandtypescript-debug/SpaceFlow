@@ -64,9 +64,10 @@ Sin argumentos se abre un menú pensado para pantallas táctiles. M4A es el
 formato predeterminado porque evita conversiones innecesarias; MP3 está
 disponible con `--format mp3`.
 
-En a-Shell, `play` abre el stream en el reproductor de iOS. iSH no expone una
-salida de audio del sistema: allí puedes consultar y descargar, y después abrir
-el archivo desde Archivos, o usar a-Shell para escuchar directamente.
+En a-Shell, `play` abre el stream en el reproductor de iOS. En Termux reproduce
+el HLS mediante `mpv` y la salida OpenSL ES de Android. iSH no expone una salida
+de audio del sistema: allí puedes consultar y descargar, y después abrir el
+archivo desde Archivos, o usar a-Shell para escuchar directamente.
 
 ## Información disponible
 

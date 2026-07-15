@@ -197,6 +197,28 @@ class YtDlpSpaceProvider:
                 Participant(participant_id, name, item.get("username") or item.get("screen_name"), role)
             )
             seen.add(participant_id)
+        if len(result) > (1 if host else 0):
+            return result
+
+        prefix = "Twitter Space participated by "
+        description = str(info.get("description") or "")
+        if not description.startswith(prefix):
+            return result
+        names = description[len(prefix):].strip()
+        if not names or names.casefold() == "nobody yet":
+            return result
+        host_name = host.name.casefold() if host else ""
+        for index, name in enumerate(names.split(", "), 1):
+            name = name.strip()
+            if not name or name.casefold() == host_name:
+                continue
+            result.append(
+                Participant(
+                    id=f"speaker{index}",
+                    name=name,
+                    role=ParticipantRole.SPEAKER,
+                )
+            )
         return result
 
     @staticmethod

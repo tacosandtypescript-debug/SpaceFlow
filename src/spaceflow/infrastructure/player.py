@@ -17,6 +17,13 @@ class SystemAudioPlayer:
                 os.startfile(url)  # type: ignore[attr-defined]
                 return
             if kind == "termux":
+                mpv = shutil.which("mpv")
+                if mpv:
+                    subprocess.run(
+                        [mpv, "--no-video", "--really-quiet", url],
+                        check=True,
+                    )
+                    return
                 command = shutil.which("termux-open-url") or shutil.which("termux-open")
                 if command:
                     subprocess.run([command, url], check=True)

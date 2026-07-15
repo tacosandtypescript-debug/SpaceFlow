@@ -37,6 +37,7 @@ elif [ -n "${TERMUX_VERSION:-}" ] || echo "${PREFIX:-}" | grep -q 'com.termux'; 
     command -v python >/dev/null 2>&1 || MISSING_PACKAGES="$MISSING_PACKAGES python"
     command -v ffmpeg >/dev/null 2>&1 || MISSING_PACKAGES="$MISSING_PACKAGES ffmpeg"
     command -v curl >/dev/null 2>&1 || MISSING_PACKAGES="$MISSING_PACKAGES curl"
+    command -v mpv >/dev/null 2>&1 || MISSING_PACKAGES="$MISSING_PACKAGES mpv"
     if [ -n "$MISSING_PACKAGES" ]; then
         pkg install -y $MISSING_PACKAGES
     else
