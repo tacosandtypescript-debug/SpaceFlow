@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.12] - 2026-07-16
+
+- Corregido el instalador de a-Shell para guardar el PATH en `~/Documents/.profile`, donde iOS permite escritura.
+- Las reinstalaciones ya no duplican la configuración del PATH.
+- El instalador recomienda ejecutar `rehash` en a-Shell cuando sea necesario actualizar la lista de comandos.
+
 ## [0.1.11] - 2026-07-16
 
 - README reorganizado con compatibilidad, instalación, uso, actualizaciones y enlaces.

@@ -104,12 +104,24 @@ chmod +x "$BIN_DIR/spaceflow"
 case ":${PATH}:" in
     *":$BIN_DIR:"*) ;;
     *)
-        PROFILE="$HOME/.profile"
-        echo "export PATH=\"$BIN_DIR:\$PATH\"" >> "$PROFILE"
+        if [ "$PLATFORM" = "ashell" ]; then
+            # a-Shell protege la raíz de su contenedor. Sus archivos de inicio
+            # editables y persistentes viven dentro de ~/Documents.
+            PROFILE="$HOME/Documents/.profile"
+        else
+            PROFILE="$HOME/.profile"
+        fi
+        PATH_LINE="export PATH=\"$BIN_DIR:\$PATH\""
+        if [ ! -f "$PROFILE" ] || ! grep -F "$PATH_LINE" "$PROFILE" >/dev/null 2>&1; then
+            echo "$PATH_LINE" >> "$PROFILE"
+        fi
         export PATH="$BIN_DIR:$PATH"
         ;;
 esac
 
 echo "SpaceFlow instalado para $PLATFORM."
+if [ "$PLATFORM" = "ashell" ]; then
+    echo "Si el comando no aparece todavía, ejecuta: rehash"
+fi
 echo "Ejecuta: spaceflow"
 echo "Las cookies son opcionales y solo hacen falta si X exige iniciar sesión."

@@ -13,6 +13,20 @@ spaceflow --version
 En instalaciones antiguas también puedes cerrar y volver a abrir la terminal
 para recargar el PATH.
 
+## `cannot create .../.profile: Operation not permitted` en a-Shell
+
+Ese error pertenece a versiones anteriores del instalador, que intentaban
+escribir fuera de la carpeta permitida por iOS. Vuelve a instalar; SpaceFlow
+ahora utiliza `~/Documents/.profile`:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/main/scripts/install.sh | sh
+rehash
+spaceflow --version
+```
+
+No es necesario borrar la descarga anterior.
+
 ## `pkg: not found` en iSH
 
 iSH utiliza Alpine Linux y su gestor es `apk`. No pegues instrucciones de
