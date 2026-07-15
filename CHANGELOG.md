@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.13] - 2026-07-16
+
+- Botones separados para copiar la instalación desde GitHub en iPhone/iPad y Android.
+- Página móvil con instrucciones específicas para a-Shell, iSH y Termux.
+- Confirmación visible después de copiar y método alternativo para navegadores móviles antiguos.
+
 ## [0.1.12] - 2026-07-16
 
 - Corregido el instalador de a-Shell para guardar el PATH en `~/Documents/.profile`, donde iOS permite escritura.

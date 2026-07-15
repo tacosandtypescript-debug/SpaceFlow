@@ -7,13 +7,21 @@ enlace directo de un Space o la publicación de X que contiene la grabación.
 > Utiliza SpaceFlow únicamente con contenido que tengas derecho a escuchar o
 > conservar. Respeta las condiciones de X y la legislación aplicable.
 
-## Instalar ahora
+## Instalar desde la app móvil de GitHub
 
-En **Termux, a-Shell o iSH**, toca el botón verde para abrir el copiador móvil:
+Toca el botón correspondiente a tu dispositivo. Se abrirá una página preparada
+para el móvil donde podrás copiar el comando completo con un solo toque.
 
-[![Copiar instalación](https://img.shields.io/badge/COPIAR-INSTALACIÓN-2ea44f?style=for-the-badge&logo=github)](https://tacosandtypescript-debug.github.io/SpaceFlow/)
+### iPhone o iPad · a-Shell/iSH
 
-También puedes mantener pulsado y copiar el comando manualmente:
+[![Copiar para Apple](https://img.shields.io/badge/APPLE-COPIAR_PARA_a--SHELL_O_iSH-0a84ff?style=for-the-badge&logo=apple&logoColor=white)](https://tacosandtypescript-debug.github.io/SpaceFlow/?device=apple)
+
+### Android · Termux
+
+[![Copiar para Android](https://img.shields.io/badge/ANDROID-COPIAR_PARA_TERMUX-3ddc84?style=for-the-badge&logo=android&logoColor=111111)](https://tacosandtypescript-debug.github.io/SpaceFlow/?device=android)
+
+Si la app de GitHub no abre los botones, mantén pulsado este bloque y copia el
+comando manualmente:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/main/scripts/install.sh | sh
