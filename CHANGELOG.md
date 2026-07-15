@@ -2,6 +2,13 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.5] - 2026-07-15
+
+- “Escuchar” abre inmediatamente el stream HLS en el reproductor del sistema sin descargarlo antes.
+- En a-Shell se usa la integración `open` de iOS para reproducir el Space.
+- iSH explica su limitación de audio y recomienda a-Shell o descargar el archivo.
+- Una cancelación de FFmpeg ya no se presenta como una instalación defectuosa.
+
 ## [0.1.4] - 2026-07-15
 
 - El instalador omite paquetes, entorno Python y `yt-dlp` cuando ya existen.

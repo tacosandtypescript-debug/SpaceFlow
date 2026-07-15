@@ -18,7 +18,7 @@ def run_menu(container: Container) -> int:
         print("│       SpaceFlow          │")
         print("╰──────────────────────────╯")
         print("1. Ver información de un Space")
-        print("2. Escuchar y guardar")
+        print("2. Escuchar ahora (sin descargar)")
         print("3. Descargar")
         print("4. Grabar un Space en vivo")
         print("5. Ver biblioteca")
@@ -33,8 +33,8 @@ def run_menu(container: Container) -> int:
             if choice == "1":
                 print_space(container.service.info(_ask("Pega el enlace: ")))
             elif choice == "2":
-                asset = container.service.play_url(_ask("Pega el enlace: "), container.config.default_format)
-                print(f"Audio guardado en: {asset.path}")
+                container.service.play_url(_ask("Pega el enlace: "))
+                print("Reproductor abierto. Para guardar el audio usa la opción 3.")
             elif choice == "3":
                 url = _ask("Pega el enlace: ")
                 audio_format = _ask("Formato [m4a/mp3] (m4a): ").lower() or "m4a"

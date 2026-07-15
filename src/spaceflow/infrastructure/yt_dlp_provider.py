@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from spaceflow.domain.errors import DownloadFailed, SpaceUnavailable
 from spaceflow.domain.models import Participant, ParticipantRole, Space, SpaceId, SpaceState
@@ -34,6 +35,28 @@ class YtDlpSpaceProvider:
         self.quiet = quiet
 
     def get_info(self, url: str) -> Space:
+        info = self._extract_info(url)
+        return self._to_space(url, info)
+
+    def stream_url(self, url: str) -> str:
+        info = self._extract_info(url)
+        candidates = [info.get("url"), info.get("manifest_url")]
+        formats = info.get("formats")
+        if isinstance(formats, list):
+            audio_formats = [
+                item
+                for item in formats
+                if isinstance(item, dict)
+                and item.get("url")
+                and str(item.get("acodec") or "none") != "none"
+            ]
+            candidates.extend(item.get("url") for item in reversed(audio_formats))
+        for candidate in candidates:
+            if isinstance(candidate, str) and urlparse(candidate).scheme in {"http", "https"}:
+                return candidate
+        raise SpaceUnavailable("X no devolvió una URL reproducible para este Space")
+
+    def _extract_info(self, url: str) -> dict[str, Any]:
         yt_dlp = _load_yt_dlp()
         options = {
             "quiet": True,
@@ -49,7 +72,7 @@ class YtDlpSpaceProvider:
             raise SpaceUnavailable(self._friendly_error(exc)) from exc
         if not isinstance(info, dict):
             raise SpaceUnavailable("X no devolvió información de este Space")
-        return self._to_space(url, info)
+        return info
 
     def download(
         self,
@@ -191,6 +214,8 @@ class YtDlpSpaceProvider:
     def _friendly_error(self, error: Exception) -> str:
         message = str(error).replace("ERROR: ", "").strip()
         lowered = message.lower()
+        if "received signal 2" in lowered or "interrupted by user" in lowered:
+            return "Operación cancelada antes de terminar."
         if "cookies" in lowered or "login" in lowered or "unauthorized" in lowered:
             if self.cookies_file.is_file():
                 return "X rechazó las cookies. Expórtalas otra vez e impórtalas con SpaceFlow."

@@ -22,7 +22,12 @@ class FakeYoutubeDL:
         return False
 
     def extract_info(self, url, download=False):
-        return {"id": "AbC123", "title": "Space público", "webpage_url": url}
+        return {
+            "id": "AbC123",
+            "title": "Space público",
+            "webpage_url": url,
+            "url": "https://media.example/space.m3u8",
+        }
 
     def download(self, urls):
         return 0
@@ -58,6 +63,22 @@ class OptionalCookiesTests(unittest.TestCase):
             )
         self.assertEqual(len(FakeYoutubeDL.seen_options), 2)
         self.assertTrue(all(item["no_warnings"] for item in FakeYoutubeDL.seen_options))
+
+    def test_stream_url_returns_the_resolved_hls_url(self):
+        provider = YtDlpSpaceProvider(Path("missing-cookies.txt"))
+        with patch(
+            "spaceflow.infrastructure.yt_dlp_provider._load_yt_dlp",
+            return_value=FakeYtDlp,
+        ):
+            result = provider.stream_url("https://x.com/i/spaces/AbC123")
+        self.assertEqual(result, "https://media.example/space.m3u8")
+
+    def test_user_cancellation_is_not_reported_as_broken_ffmpeg(self):
+        provider = YtDlpSpaceProvider(Path("missing-cookies.txt"))
+        result = provider._friendly_error(
+            RuntimeError("ffmpeg exited with code 255 after received signal 2")
+        )
+        self.assertEqual(result, "Operación cancelada antes de terminar.")
 
 
 if __name__ == "__main__":

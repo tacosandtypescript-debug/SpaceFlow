@@ -21,9 +21,8 @@ def parser() -> argparse.ArgumentParser:
     info.add_argument("url")
     info.add_argument("--json", action="store_true", dest="as_json")
 
-    play = commands.add_parser("play", help="Guardar y reproducir un Space")
+    play = commands.add_parser("play", help="Escuchar un Space sin descargarlo")
     play.add_argument("url")
-    play.add_argument("--format", choices=("m4a", "mp3"), default=None)
 
     download = commands.add_parser("download", help="Descargar una grabación")
     download.add_argument("url")
@@ -98,8 +97,8 @@ def execute(args: argparse.Namespace, container: Container) -> int:
         else:
             print_space(space)
     elif command == "play":
-        asset = container.service.play_url(args.url, audio_format)
-        print(asset.path)
+        container.service.play_url(args.url)
+        print("Reproductor abierto. Usa 'download' si también quieres guardar el audio.")
     elif command in {"download", "record"}:
         from_start = getattr(args, "from_start", True)
         asset, fallback = container.service.download(

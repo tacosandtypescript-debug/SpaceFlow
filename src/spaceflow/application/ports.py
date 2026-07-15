@@ -23,6 +23,8 @@ class SpaceUrlResolver(Protocol):
 class SpaceMediaProvider(Protocol):
     def get_info(self, url: str) -> Space: ...
 
+    def stream_url(self, url: str) -> str: ...
+
     def download(
         self,
         space: Space,
@@ -47,6 +49,8 @@ class LibraryRepository(Protocol):
 
 class AudioPlayer(Protocol):
     def play(self, path: Path) -> None: ...
+
+    def play_url(self, url: str) -> None: ...
 
 
 class CookieStore(Protocol):

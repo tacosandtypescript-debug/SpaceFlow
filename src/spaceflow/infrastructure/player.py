@@ -10,6 +10,32 @@ from spaceflow.infrastructure.config import detect_platform
 
 
 class SystemAudioPlayer:
+    def play_url(self, url: str) -> None:
+        kind = detect_platform()
+        try:
+            if kind == "windows":
+                os.startfile(url)  # type: ignore[attr-defined]
+                return
+            if kind == "termux":
+                command = shutil.which("termux-open-url") or shutil.which("termux-open")
+                if command:
+                    subprocess.run([command, url], check=True)
+                    return
+            if kind == "ashell":
+                subprocess.run(["open", url], check=True)
+                return
+            if kind == "ish":
+                raise PlaybackFailed(
+                    "iSH no ofrece salida de audio. Usa a-Shell para escuchar o descarga el archivo y ábrelo desde Archivos."
+                )
+            command = shutil.which("open") or shutil.which("xdg-open")
+            if command:
+                subprocess.run([command, url], check=True)
+                return
+        except (OSError, subprocess.SubprocessError) as exc:
+            raise PlaybackFailed(f"No se pudo abrir el reproductor: {exc}") from exc
+        raise PlaybackFailed("No encontré un reproductor para abrir el audio en streaming.")
+
     def play(self, path: Path) -> None:
         path = path.expanduser().resolve()
         if not path.is_file():

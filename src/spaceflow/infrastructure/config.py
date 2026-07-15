@@ -14,6 +14,8 @@ def detect_platform() -> str:
     appname = os.environ.get("APPNAME", "").lower()
     if "com.termux" in prefix or os.environ.get("TERMUX_VERSION"):
         return "termux"
+    if Path("/etc/alpine-release").is_file():
+        return "ish"
     if "a-shell" in appname or platform.system() in {"iOS", "Darwin"} and Path.home().joinpath("Documents").exists():
         return "ashell"
     if os.name == "nt":

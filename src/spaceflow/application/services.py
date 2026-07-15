@@ -45,10 +45,11 @@ class SpaceFlowService:
         asset = self.library.save_metadata(space, path, audio_format)
         return asset, used_fallback
 
-    def play_url(self, url: str, audio_format: str = "m4a") -> AudioAsset:
-        asset, _ = self.download(url, audio_format=audio_format)
-        self.player.play(asset.path)
-        return asset
+    def play_url(self, url: str) -> str:
+        resolved_url = self.resolver.resolve(url)
+        stream_url = self.media.stream_url(resolved_url)
+        self.player.play_url(stream_url)
+        return stream_url
 
     def play_asset(self, asset: AudioAsset) -> None:
         self.player.play(asset.path)

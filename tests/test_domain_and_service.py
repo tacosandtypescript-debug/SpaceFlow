@@ -20,6 +20,9 @@ class Media:
     def get_info(self, url: str) -> Space:
         return Space(SpaceId("AbC123"), url, url, "Un Space", SpaceState.ENDED)
 
+    def stream_url(self, url: str) -> str:
+        return "https://media.example/space.m3u8"
+
     def download(self, space, destination_stem, audio_format, live_from_start=True):
         path = destination_stem.with_suffix("." + audio_format)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -43,21 +46,25 @@ class Library:
 class Player:
     def __init__(self) -> None:
         self.played = None
+        self.played_url = None
 
     def play(self, path: Path) -> None:
         self.played = path
 
+    def play_url(self, url: str) -> None:
+        self.played_url = url
+
 
 class ServiceTests(unittest.TestCase):
-    def test_download_and_play_are_orchestrated_without_infrastructure_details(self):
+    def test_stream_playback_does_not_download_the_space(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             player = Player()
             service = SpaceFlowService(Resolver(), Media(root), Library(root), player)
-            asset = service.play_url("https://x.com/user/status/123")
-            self.assertEqual(asset.space_id.value, "AbC123")
-            self.assertEqual(player.played, asset.path)
-            self.assertTrue(asset.path.is_file())
+            stream_url = service.play_url("https://x.com/user/status/123")
+            self.assertEqual(stream_url, "https://media.example/space.m3u8")
+            self.assertEqual(player.played_url, stream_url)
+            self.assertIsNone(player.played)
 
     def test_space_serialization_excludes_raw_provider_payload(self):
         space = Space(

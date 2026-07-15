@@ -53,7 +53,7 @@ ni se imprimen en pantalla. Consulta [la guía de cookies](docs/COOKIES.md).
 
 ```sh
 spaceflow info "https://x.com/usuario/status/123"
-spaceflow play "https://x.com/i/spaces/1example"
+spaceflow play "https://x.com/i/spaces/1example"  # abre el stream sin descargar
 spaceflow download URL --format m4a
 spaceflow record URL --from-start
 spaceflow library list
@@ -63,6 +63,10 @@ spaceflow update --check
 Sin argumentos se abre un menú pensado para pantallas táctiles. M4A es el
 formato predeterminado porque evita conversiones innecesarias; MP3 está
 disponible con `--format mp3`.
+
+En a-Shell, `play` abre el stream en el reproductor de iOS. iSH no expone una
+salida de audio del sistema: allí puedes consultar y descargar, y después abrir
+el archivo desde Archivos, o usar a-Shell para escuchar directamente.
 
 ## Información disponible
 
