@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "spaceflow"
+version = "0.1.0"
+description = "Escucha, descarga y graba X Spaces desde a-Shell, Termux y Windows."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "tacosandtypescript-debug" }]
+dependencies = ["yt-dlp>=2025.1.15"]
+keywords = ["x-spaces", "twitter-spaces", "audio", "termux", "a-shell"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+]
+
+[project.scripts]
+spaceflow = "spaceflow.presentation.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/tacosandtypescript-debug/SpaceFlow"
+Issues = "https://github.com/tacosandtypescript-debug/SpaceFlow/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/spaceflow"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

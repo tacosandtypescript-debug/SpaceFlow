@@ -1,0 +1,14 @@
+# Exportar cookies de X
+
+SpaceFlow recibe un archivo Netscape `cookies.txt`. Debe proceder de una sesión
+propia y se usa localmente para que X entregue el audio y los metadatos.
+
+1. Exporta únicamente las cookies de `x.com`/`twitter.com` con una herramienta
+   de confianza.
+2. Transfiere el archivo al dispositivo sin publicarlo ni enviarlo por chats.
+3. Ejecuta `spaceflow auth import /ruta/cookies.txt`.
+4. Borra la copia original si ya no la necesitas.
+
+En iOS no se extraen cookies automáticamente. En Android y Windows también se
+prefiere la importación explícita para no acceder silenciosamente al perfil del
+navegador. Si X responde que la sesión caducó, exporta un archivo nuevo.
