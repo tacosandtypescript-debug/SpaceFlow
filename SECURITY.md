@@ -9,3 +9,8 @@ persona sigue siendo responsable de revisar un commit antes de publicarlo.
 
 Las actualizaciones automáticas solo se instalan después de verificar el hash
 SHA-256 publicado en la misma GitHub Release.
+
+Antes de reportar un problema, elimina cookies, tokens, identificadores privados
+y rutas personales de capturas o registros. Los fallos generales se pueden
+reportar en [GitHub Issues](https://github.com/tacosandtypescript-debug/SpaceFlow/issues),
+pero un secreto expuesto debe revocarse antes de cualquier otra acción.

@@ -20,6 +20,12 @@ CLI/Menu -> SpaceFlowService -> puertos de aplicación
                                |-> SystemAudioPlayer
 ```
 
+`SystemAudioPlayer` selecciona el comportamiento según la plataforma. En
+Termux administra MPV, su socket de control y su proceso; en a-Shell delega la
+reproducción al sistema iOS. `GitHubReleaseRepository` consulta Releases y, en
+plataformas móviles, ejecuta el instalador incremental para incorporar nuevas
+dependencias además del archivo `spaceflow.pyz`.
+
 ## Extensión
 
 Un proveedor nuevo implementa `SpaceMediaProvider`; un reproductor nuevo,
@@ -27,6 +33,18 @@ Un proveedor nuevo implementa `SpaceMediaProvider`; un reproductor nuevo,
 sistema ni formatos de respuesta externos. Los adaptadores traducen cualquier
 respuesta a `Space` y `AudioAsset`.
 
-Los contextos funcionales son Spaces, Biblioteca, Autenticación, Actualizaciones
-y Plataformas. Si crecen, pueden separarse en paquetes sin cambiar las
-interfaces públicas actuales.
+Los contextos funcionales son Spaces, Reproducción, Biblioteca, Autenticación,
+Actualizaciones y Plataformas. Si crecen, pueden separarse en paquetes sin
+cambiar las interfaces públicas actuales.
+
+## Reglas de dependencia
+
+- `domain` no conoce yt-dlp, MPV, GitHub ni el sistema de archivos.
+- `application` define los puertos y coordina casos de uso.
+- `infrastructure` traduce herramientas externas a los modelos del dominio.
+- `presentation` no ejecuta comandos del sistema directamente.
+- `bootstrap` es el único lugar que construye y conecta los adaptadores.
+
+Los detalles de instalación y uso pertenecen a
+[INSTALLATION.md](INSTALLATION.md) y [USAGE.md](USAGE.md), no a las entidades del
+dominio.

@@ -26,6 +26,8 @@ spaceflow = "spaceflow.presentation.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/tacosandtypescript-debug/SpaceFlow"
+Documentation = "https://github.com/tacosandtypescript-debug/SpaceFlow#readme"
+Changelog = "https://github.com/tacosandtypescript-debug/SpaceFlow/blob/main/CHANGELOG.md"
 Issues = "https://github.com/tacosandtypescript-debug/SpaceFlow/issues"
 
 [tool.hatch.build.targets.wheel]

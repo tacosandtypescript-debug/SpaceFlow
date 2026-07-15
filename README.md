@@ -1,28 +1,31 @@
 # SpaceFlow
 
-SpaceFlow permite consultar, escuchar, descargar y grabar X Spaces desde
-a-Shell o iSH en iPhone/iPad, Termux en Android y Windows. Acepta el enlace directo
-del Space o la publicación de X que contiene el botón **Reproducir grabación**.
+SpaceFlow es una herramienta de Python para consultar, escuchar, descargar y
+grabar X Spaces desde **Termux**, **a-Shell**, **iSH** y **Windows**. Acepta el
+enlace directo de un Space o la publicación de X que contiene la grabación.
 
-> Usa SpaceFlow únicamente para contenido que tengas derecho a escuchar o
-> conservar y respeta las condiciones de X y la legislación aplicable.
+> Utiliza SpaceFlow únicamente con contenido que tengas derecho a escuchar o
+> conservar. Respeta las condiciones de X y la legislación aplicable.
+
+## Compatibilidad
+
+| Plataforma | Información | Escuchar | Descargar/grabar | Control del audio |
+|---|---:|---:|---:|---|
+| Termux (Android) | Sí | Sí | Sí | Menú, comandos y botones físicos |
+| a-Shell (iOS/iPadOS) | Sí | Sí | Sí | Reproductor y botones de iOS |
+| iSH (iOS/iPadOS) | Sí | No | Sí | Abrir después desde Archivos |
+| Windows | Sí | Sí | Sí | Reproductor de Windows |
+
+iSH no expone una salida de audio del sistema. En iPhone y iPad se recomienda
+**a-Shell** para escuchar directamente.
 
 ## Instalación rápida
 
-### a-Shell, iSH y Termux
+### Termux, a-Shell o iSH
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/main/scripts/install.sh | sh
 ```
-
-El instalador detecta cada terminal automáticamente. En iSH instala sus
-dependencias con `apk` y aísla Python en un entorno propio. En Termux conviene
-ejecutar antes `termux-setup-storage`. En a-Shell usa `~/Documents/bin`, una
-ruta apropiada para comandos personales.
-
-Las actualizaciones son incrementales: si Python, FFmpeg, curl y `yt-dlp` ya
-están disponibles, el instalador no vuelve a instalarlos. Para actualizar
-también las dependencias, usa `SPACEFLOW_UPDATE_DEPS=1` antes del comando.
 
 ### Windows PowerShell
 
@@ -30,66 +33,95 @@ también las dependencias, usa `SPACEFLOW_UPDATE_DEPS=1` antes del comando.
 irm https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/main/scripts/install.ps1 | iex
 ```
 
-Este comando es exclusivamente para Windows PowerShell; en iSH se usa el
-comando `curl` de la sección anterior.
-
-El instalador descarga Python y FFmpeg con `winget` cuando faltan, instala
-`yt-dlp`, descarga `spaceflow.pyz` de la última Release y configura el comando.
-
-## Primer inicio
-
-Los Spaces públicos se pueden usar sin cookies. Si X exige iniciar sesión para
-un Space concreto, importa cookies de una sesión propia en formato Netscape:
+Comprueba la instalación:
 
 ```sh
-spaceflow auth import /ruta/al/cookies.txt
+spaceflow --version
 spaceflow
 ```
 
-Las cookies se copian al directorio privado de SpaceFlow. No se suben a GitHub
-ni se imprimen en pantalla. Consulta [la guía de cookies](docs/COOKIES.md).
+El instalador detecta la plataforma, instala únicamente las dependencias que
+faltan y descarga la versión estable más reciente con verificación SHA-256.
+Consulta la [guía de instalación](docs/INSTALLATION.md) para requisitos,
+actualización y pasos específicos de cada sistema.
 
-## Uso
+## Uso rápido
+
+Sin argumentos se abre el menú interactivo:
+
+```sh
+spaceflow
+```
+
+También puedes utilizar comandos directos:
 
 ```sh
 spaceflow info "https://x.com/usuario/status/123"
-spaceflow play "https://x.com/i/spaces/1example"  # abre el stream sin descargar
-spaceflow playback volume-down                    # baja el volumen en Termux
-spaceflow playback pause                          # pausa el audio
-spaceflow playback stop                           # detiene el audio
+spaceflow play "https://x.com/i/spaces/1example"
 spaceflow download URL --format m4a
 spaceflow record URL --from-start
 spaceflow library list
 spaceflow update --check
 ```
 
-Sin argumentos se abre un menú pensado para pantallas táctiles. M4A es el
-formato predeterminado porque evita conversiones innecesarias; MP3 está
-disponible con `--format mp3`.
+En Termux también están disponibles:
 
-En a-Shell, `play` abre el stream en el reproductor de iOS. En Termux reproduce
-el HLS mediante `mpv` y la salida OpenSL ES de Android. El menú incluye un panel
-visible para pausar, continuar, detener y cambiar el volumen. Los botones físicos
-de volumen del teléfono controlan el canal multimedia de Android. Al empezar a
-escuchar, SpaceFlow configura automáticamente `volume-keys = volume` en Termux;
-por eso esos botones dejan de funcionar como `Ctrl` y tecla especial dentro de la
-terminal. iSH no expone una salida
-de audio del sistema: allí puedes consultar y descargar, y después abrir el
-archivo desde Archivos, o usar a-Shell para escuchar directamente.
+```sh
+spaceflow playback pause
+spaceflow playback resume
+spaceflow playback volume-down
+spaceflow playback volume-up
+spaceflow playback stop
+```
 
-SpaceFlow consulta GitHub cada vez que se abre y muestra un aviso cuando existe
-una versión más reciente.
+Al comenzar a escuchar en Termux, SpaceFlow configura `volume-keys = volume`
+para que los botones físicos controlen el volumen multimedia de Android. Esos
+botones dejan de actuar como `Ctrl` y tecla especial dentro de Termux.
 
-Al actualizar desde el menú en a-Shell, iSH o Termux, SpaceFlow vuelve a ejecutar
-el instalador incremental. Así se añaden automáticamente herramientas nuevas que
-falten sin reinstalar las que ya están disponibles.
+En a-Shell, el audio se abre en el reproductor nativo de iOS. El volumen, la
+pausa y la reproducción se controlan con los botones físicos, el Centro de
+control o la pantalla bloqueada.
 
-## Información disponible
+Lee la [guía de uso](docs/USAGE.md) para conocer todas las opciones del menú,
+los formatos y los controles disponibles por plataforma.
 
-SpaceFlow muestra el título, anfitrión, hablantes, duración, estado y contador
-cuando X los entrega. X no publica la identidad de todos los oyentes y puede
-retirar metadatos cuando termina un Space; en esos casos se muestra
-`No disponible` sin inventar datos.
+## Cookies
+
+Los Spaces públicos funcionan sin cookies. Solo necesitas importarlas si X
+exige iniciar sesión para un Space concreto:
+
+```sh
+spaceflow auth import /ruta/cookies.txt
+```
+
+SpaceFlow guarda el archivo localmente, con permisos privados cuando el sistema
+lo permite, y nunca lo sube al repositorio. Consulta la
+[guía de cookies](docs/COOKIES.md).
+
+## Actualizaciones
+
+SpaceFlow comprueba si existe una versión nueva cada vez que se abre. Para
+actualizar manualmente:
+
+```sh
+spaceflow update
+```
+
+En Termux, a-Shell e iSH la actualización ejecuta el instalador incremental para
+incorporar también cualquier dependencia nueva.
+
+## Ayuda y enlaces
+
+- [Última versión estable](https://github.com/tacosandtypescript-debug/SpaceFlow/releases/latest)
+- [Todas las versiones](https://github.com/tacosandtypescript-debug/SpaceFlow/releases)
+- [Reportar un problema](https://github.com/tacosandtypescript-debug/SpaceFlow/issues)
+- [Instalación detallada](docs/INSTALLATION.md)
+- [Guía de uso](docs/USAGE.md)
+- [Solución de problemas](docs/TROUBLESHOOTING.md)
+- [Arquitectura DDD](docs/ARCHITECTURE.md)
+- [Seguridad](SECURITY.md)
+- [Cambios por versión](CHANGELOG.md)
+- [Licencia MIT](LICENSE)
 
 ## Desarrollo
 
@@ -99,5 +131,6 @@ python -m unittest discover -s tests -v
 python scripts/build_zipapp.py
 ```
 
-La arquitectura y las reglas para añadir proveedores están en
-[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+SpaceFlow requiere Python 3.9 o superior. Las contribuciones deben conservar la
+separación entre dominio, aplicación, infraestructura y presentación descrita
+en la [arquitectura](docs/ARCHITECTURE.md).

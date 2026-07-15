@@ -13,3 +13,10 @@ una sesión propia y lo usa localmente para obtener el audio y los metadatos.
 En iOS no se extraen cookies automáticamente. En Android y Windows también se
 prefiere la importación explícita para no acceder silenciosamente al perfil del
 navegador. Si X responde que la sesión caducó, exporta un archivo nuevo.
+
+Comprueba que el archivo comienza con una cabecera Netscape válida y nunca lo
+añadas al repositorio. SpaceFlow copia únicamente el archivo que indiques; no
+lee automáticamente cookies de Safari, Chrome, Firefox ni otras aplicaciones.
+
+Para errores que no estén relacionados con autenticación, consulta
+[TROUBLESHOOTING.md](TROUBLESHOOTING.md).

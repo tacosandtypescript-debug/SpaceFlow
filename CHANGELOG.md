@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [Sin publicar]
+
+- README reorganizado con compatibilidad, instalación, uso, actualizaciones y enlaces.
+- Nuevas guías de instalación, uso y solución de problemas por plataforma.
+- Metadatos del paquete enlazados a la documentación y al changelog.
+
 ## [0.1.10] - 2026-07-15
 
 - Configuración automática de `volume-keys = volume` en Termux al escuchar.

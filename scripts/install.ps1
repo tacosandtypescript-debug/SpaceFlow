@@ -58,4 +58,6 @@ if (($UserPath -split ";") -notcontains $BinDir) {
 }
 
 Write-Host "SpaceFlow instalado. Abre otra terminal y ejecuta:"
-Write-Host "spaceflow auth import C:\ruta\cookies.txt"
+Write-Host "spaceflow --version"
+Write-Host "spaceflow"
+Write-Host "Las cookies son opcionales y solo hacen falta si X exige iniciar sesión."
