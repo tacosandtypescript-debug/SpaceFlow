@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.6] - 2026-07-15
+
+- Menú reorganizado en acciones principales y herramientas.
+- Colores accesibles para opciones, estados correctos, avisos y errores.
+- Compatibilidad con `NO_COLOR` y salidas redirigidas sin códigos ANSI.
+
 ## [0.1.5] - 2026-07-15
 
 - “Escuchar” abre inmediatamente el stream HLS en el reproductor del sistema sin descargarlo antes.
