@@ -7,6 +7,20 @@ enlace directo de un Space o la publicación de X que contiene la grabación.
 > Utiliza SpaceFlow únicamente con contenido que tengas derecho a escuchar o
 > conservar. Respeta las condiciones de X y la legislación aplicable.
 
+## Instalar ahora
+
+En **Termux, a-Shell o iSH**, pulsa el icono de copiar que aparece a la derecha
+del siguiente comando, pégalo en la terminal y presiona Enter:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/tacosandtypescript-debug/SpaceFlow/main/scripts/install.sh | sh
+```
+
+[![Abrir el instalador](https://img.shields.io/badge/Instalador-Ver%20código-2ea44f?logo=github)](https://github.com/tacosandtypescript-debug/SpaceFlow/blob/main/scripts/install.sh)
+
+Después ejecuta `spaceflow`. El instalador reconoce automáticamente cuál de
+los tres sistemas estás usando.
+
 ## Compatibilidad
 
 | Plataforma | Información | Escuchar | Descargar/grabar | Control del audio |
