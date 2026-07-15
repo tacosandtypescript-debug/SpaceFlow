@@ -2,6 +2,13 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.8] - 2026-07-15
+
+- Reproducción de Termux en segundo plano para devolver inmediatamente el menú.
+- Panel para pausar, continuar, detener y subir o bajar el volumen.
+- Comandos `spaceflow playback` para controlar el audio fuera del menú.
+- La actualización móvil desde el menú ejecuta el instalador completo y añade dependencias faltantes.
+
 ## [0.1.7] - 2026-07-15
 
 - Reproducción HLS dentro de Termux mediante `mpv` y OpenSL ES.

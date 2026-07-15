@@ -6,7 +6,7 @@ from pathlib import Path
 from spaceflow import __version__
 from spaceflow.application.services import SpaceFlowService
 from spaceflow.application.update_service import UpdateService
-from spaceflow.infrastructure.config import AppConfig, ConfigStore
+from spaceflow.infrastructure.config import AppConfig, ConfigStore, detect_platform
 from spaceflow.infrastructure.cookies import NetscapeCookieStore
 from spaceflow.infrastructure.library import JsonLibraryRepository
 from spaceflow.infrastructure.player import SystemAudioPlayer
@@ -34,6 +34,6 @@ def build_container(data_dir: Path | None = None) -> Container:
     media = YtDlpSpaceProvider(cookies.path)
     player = SystemAudioPlayer()
     service = SpaceFlowService(resolver, media, library, player)
-    releases = GitHubReleaseRepository(config.update_repo, __version__)
+    releases = GitHubReleaseRepository(config.update_repo, __version__, detect_platform())
     updates = UpdateService(releases, config_store)
     return Container(config_store, config, cookies, library, service, updates)

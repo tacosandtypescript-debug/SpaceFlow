@@ -5,6 +5,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import urllib.error
@@ -21,9 +22,10 @@ def version_tuple(value: str) -> tuple[int, ...]:
 
 
 class GitHubReleaseRepository:
-    def __init__(self, repository: str, current_version: str) -> None:
+    def __init__(self, repository: str, current_version: str, platform_kind: str = "unix") -> None:
         self.repository = repository
         self.current_version = current_version
+        self.platform_kind = platform_kind
         self.api_url = f"https://api.github.com/repos/{repository}/releases/latest"
 
     def latest(self) -> ReleaseInfo | None:
@@ -47,6 +49,9 @@ class GitHubReleaseRepository:
         return ReleaseInfo(version, asset_url, checksum_url, str(payload.get("html_url") or ""))
 
     def install(self, release: ReleaseInfo) -> None:
+        if self.platform_kind in {"termux", "ashell", "ish"}:
+            self._install_mobile()
+            return
         target = Path(sys.argv[0]).resolve()
         if target.suffix != ".pyz" or not target.is_file():
             raise UpdateFailed(
@@ -71,6 +76,16 @@ class GitHubReleaseRepository:
                 if backup.exists() and not target.exists():
                     os.replace(backup, target)
                 raise UpdateFailed(f"No se pudo reemplazar SpaceFlow: {exc}") from exc
+
+    def _install_mobile(self) -> None:
+        url = f"https://raw.githubusercontent.com/{self.repository}/main/scripts/install.sh"
+        with tempfile.TemporaryDirectory(prefix="spaceflow-installer-") as directory:
+            installer = Path(directory) / "install.sh"
+            self._download(url, installer)
+            try:
+                subprocess.run(["sh", str(installer)], check=True)
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise UpdateFailed(f"El instalador móvil no pudo terminar: {exc}") from exc
 
     @staticmethod
     def _download(url: str, destination: Path) -> None:

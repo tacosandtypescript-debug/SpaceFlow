@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 from spaceflow.application.ports import ReleaseInfo
 from spaceflow.application.update_service import UpdateService
@@ -53,6 +54,24 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(GitHubReleaseRepository._expected_hash(text), "deadbeef")
         with self.assertRaises(UpdateFailed):
             GitHubReleaseRepository._expected_hash("deadbeef other.txt")
+
+    def test_mobile_update_runs_full_installer(self):
+        release = ReleaseInfo("0.2.0", "asset", "sum", "page")
+        repository = GitHubReleaseRepository("owner/repo", "0.1.0", "termux")
+
+        def download(url, destination):
+            self.assertEqual(
+                url,
+                "https://raw.githubusercontent.com/owner/repo/main/scripts/install.sh",
+            )
+            destination.write_text("#!/bin/sh\n", encoding="utf-8")
+
+        with patch.object(repository, "_download", side_effect=download), patch(
+            "spaceflow.infrastructure.updater.subprocess.run"
+        ) as run:
+            repository.install(release)
+        self.assertEqual(run.call_args.args[0][0], "sh")
+        self.assertTrue(run.call_args.kwargs["check"])
 
 
 if __name__ == "__main__":

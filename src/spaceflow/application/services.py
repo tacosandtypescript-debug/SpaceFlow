@@ -53,3 +53,15 @@ class SpaceFlowService:
 
     def play_asset(self, asset: AudioAsset) -> None:
         self.player.play(asset.path)
+
+    def pause_playback(self) -> None:
+        self.player.pause()
+
+    def resume_playback(self) -> None:
+        self.player.resume()
+
+    def stop_playback(self) -> None:
+        self.player.stop()
+
+    def change_volume(self, delta: int) -> None:
+        self.player.change_volume(delta)

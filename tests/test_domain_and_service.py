@@ -54,6 +54,18 @@ class Player:
     def play_url(self, url: str) -> None:
         self.played_url = url
 
+    def pause(self) -> None:
+        self.control = "pause"
+
+    def resume(self) -> None:
+        self.control = "resume"
+
+    def stop(self) -> None:
+        self.control = "stop"
+
+    def change_volume(self, delta: int) -> None:
+        self.control = delta
+
 
 class ServiceTests(unittest.TestCase):
     def test_stream_playback_does_not_download_the_space(self):
@@ -65,6 +77,18 @@ class ServiceTests(unittest.TestCase):
             self.assertEqual(stream_url, "https://media.example/space.m3u8")
             self.assertEqual(player.played_url, stream_url)
             self.assertIsNone(player.played)
+
+    def test_service_exposes_playback_controls(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            player = Player()
+            service = SpaceFlowService(Resolver(), Media(root), Library(root), player)
+            service.pause_playback()
+            self.assertEqual(player.control, "pause")
+            service.change_volume(-10)
+            self.assertEqual(player.control, -10)
+            service.stop_playback()
+            self.assertEqual(player.control, "stop")
 
     def test_space_serialization_excludes_raw_provider_payload(self):
         space = Space(

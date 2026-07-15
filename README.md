@@ -54,6 +54,9 @@ ni se imprimen en pantalla. Consulta [la guía de cookies](docs/COOKIES.md).
 ```sh
 spaceflow info "https://x.com/usuario/status/123"
 spaceflow play "https://x.com/i/spaces/1example"  # abre el stream sin descargar
+spaceflow playback volume-down                    # baja el volumen en Termux
+spaceflow playback pause                          # pausa el audio
+spaceflow playback stop                           # detiene el audio
 spaceflow download URL --format m4a
 spaceflow record URL --from-start
 spaceflow library list
@@ -65,9 +68,14 @@ formato predeterminado porque evita conversiones innecesarias; MP3 está
 disponible con `--format mp3`.
 
 En a-Shell, `play` abre el stream en el reproductor de iOS. En Termux reproduce
-el HLS mediante `mpv` y la salida OpenSL ES de Android. iSH no expone una salida
+el HLS mediante `mpv` y la salida OpenSL ES de Android. El menú incluye un panel
+para pausar, continuar, detener y cambiar el volumen. iSH no expone una salida
 de audio del sistema: allí puedes consultar y descargar, y después abrir el
 archivo desde Archivos, o usar a-Shell para escuchar directamente.
+
+Al actualizar desde el menú en a-Shell, iSH o Termux, SpaceFlow vuelve a ejecutar
+el instalador incremental. Así se añaden automáticamente herramientas nuevas que
+falten sin reinstalar las que ya están disponibles.
 
 ## Información disponible
 

@@ -24,6 +24,12 @@ def parser() -> argparse.ArgumentParser:
     play = commands.add_parser("play", help="Escuchar un Space sin descargarlo")
     play.add_argument("url")
 
+    playback = commands.add_parser("playback", help="Controlar la reproducción en Termux")
+    playback.add_argument(
+        "action",
+        choices=("pause", "resume", "stop", "volume-down", "volume-up"),
+    )
+
     download = commands.add_parser("download", help="Descargar una grabación")
     download.add_argument("url")
     download.add_argument("--format", choices=("m4a", "mp3"), default=None)
@@ -98,7 +104,17 @@ def execute(args: argparse.Namespace, container: Container) -> int:
             print_space(space)
     elif command == "play":
         container.service.play_url(args.url)
-        print("Reproductor abierto. Usa 'download' si también quieres guardar el audio.")
+        print("Audio iniciado en segundo plano. Usa 'spaceflow playback' para controlarlo.")
+    elif command == "playback":
+        actions = {
+            "pause": container.service.pause_playback,
+            "resume": container.service.resume_playback,
+            "stop": container.service.stop_playback,
+            "volume-down": lambda: container.service.change_volume(-10),
+            "volume-up": lambda: container.service.change_volume(10),
+        }
+        actions[args.action]()
+        print("Control aplicado.")
     elif command in {"download", "record"}:
         from_start = getattr(args, "from_start", True)
         asset, fallback = container.service.download(

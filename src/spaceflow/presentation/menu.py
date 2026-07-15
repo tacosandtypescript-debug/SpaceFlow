@@ -37,14 +37,48 @@ def _draw_menu() -> None:
     print(paint("  ESCUCHAR Y GUARDAR", BOLD, DIM, CYAN))
     _option("1", "Ver información de un Space", GREEN)
     _option("2", "Escuchar ahora", GREEN)
-    _option("3", "Descargar grabación", GREEN)
-    _option("4", "Grabar un Space en vivo", GREEN)
-    _option("5", "Ver biblioteca", GREEN)
+    _option("3", "Controlar reproducción", GREEN)
+    _option("4", "Descargar grabación", GREEN)
+    _option("5", "Grabar un Space en vivo", GREEN)
+    _option("6", "Ver biblioteca", GREEN)
     print(paint("  HERRAMIENTAS", BOLD, DIM, YELLOW))
-    _option("6", "Importar cookies de X (opcional)", YELLOW)
-    _option("7", "Buscar actualizaciones", YELLOW)
-    _option("8", "Configuración", YELLOW)
+    _option("7", "Importar cookies de X (opcional)", YELLOW)
+    _option("8", "Buscar actualizaciones", YELLOW)
+    _option("9", "Configuración", YELLOW)
     _option("0", "Salir", RED)
+
+
+def _playback_menu(container: Container) -> None:
+    while True:
+        print()
+        print(paint("  CONTROL DE REPRODUCCIÓN", BOLD, BRIGHT_CYAN))
+        _option("1", "Pausar", GREEN)
+        _option("2", "Continuar", GREEN)
+        _option("3", "Bajar volumen (-10)", YELLOW)
+        _option("4", "Subir volumen (+10)", YELLOW)
+        _option("5", "Detener audio", RED)
+        _option("0", "Volver", CYAN)
+        choice = _ask("\nElige un control: ")
+        if choice == "0":
+            return
+        if choice == "1":
+            container.service.pause_playback()
+            print(success("Audio pausado."))
+        elif choice == "2":
+            container.service.resume_playback()
+            print(success("Reproducción continuada."))
+        elif choice == "3":
+            container.service.change_volume(-10)
+            print(success("Volumen bajado 10 puntos."))
+        elif choice == "4":
+            container.service.change_volume(10)
+            print(success("Volumen subido 10 puntos."))
+        elif choice == "5":
+            container.service.stop_playback()
+            print(success("Audio detenido."))
+            return
+        else:
+            print(warning("Opción no válida."))
 
 
 def run_menu(container: Container) -> int:
@@ -58,30 +92,33 @@ def run_menu(container: Container) -> int:
                 print_space(container.service.info(_ask("Pega el enlace: ")))
             elif choice == "2":
                 container.service.play_url(_ask("Pega el enlace: "))
-                print(success("Reproductor abierto. Para guardar el audio usa la opción 3."))
+                print(success("Audio iniciado en segundo plano."))
+                print(warning("Usa la opción 3 para pausar, cambiar volumen o detenerlo."))
             elif choice == "3":
+                _playback_menu(container)
+            elif choice == "4":
                 url = _ask("Pega el enlace: ")
                 audio_format = _ask("Formato [m4a/mp3] (m4a): ").lower() or "m4a"
                 asset, fallback = container.service.download(url, audio_format)
                 print(success(f"Descarga terminada: {asset.path}"))
                 if fallback:
                     print(warning("X no permitió empezar desde el inicio; se capturó desde el momento disponible."))
-            elif choice == "4":
+            elif choice == "5":
                 url = _ask("Pega el enlace del directo: ")
                 asset, fallback = container.service.download(url, container.config.default_format, live_from_start=True)
                 print(success(f"Grabación guardada: {asset.path}"))
                 if fallback:
                     print(warning("La grabación comenzó desde el momento actual."))
-            elif choice == "5":
+            elif choice == "6":
                 assets = container.library.list_assets()
                 if not assets:
                     print(warning("La biblioteca está vacía."))
                 for index, asset in enumerate(assets, 1):
                     print(f"{index}. {asset.path.name}")
-            elif choice == "6":
+            elif choice == "7":
                 destination = container.cookies.import_file(Path(_ask("Ruta de cookies.txt: ")))
                 print(success(f"Cookies protegidas en: {destination}"))
-            elif choice == "7":
+            elif choice == "8":
                 release = container.updates.check(force=True)
                 if not release:
                     print(success("Ya tienes la versión más reciente."))
@@ -90,7 +127,7 @@ def run_menu(container: Container) -> int:
                     if _ask("¿Actualizar ahora? [s/N]: ").lower() in {"s", "si", "sí", "y", "yes"}:
                         container.updates.install(release)
                         print(success("Actualización instalada. Reinicia SpaceFlow."))
-            elif choice == "8":
+            elif choice == "9":
                 print(json.dumps(container.config_store.public_dict(), ensure_ascii=False, indent=2))
             else:
                 print(warning("Opción no válida."))
