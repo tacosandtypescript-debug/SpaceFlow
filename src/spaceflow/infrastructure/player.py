@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import signal
 import shutil
 import socket
 import subprocess
@@ -14,8 +15,9 @@ from spaceflow.infrastructure.config import detect_platform
 
 
 class SystemAudioPlayer:
-    def __init__(self, mpv_socket: Path | None = None) -> None:
+    def __init__(self, mpv_socket: Path | None = None, mpv_pid: Path | None = None) -> None:
         self.mpv_socket = mpv_socket or Path(tempfile.gettempdir()) / "spaceflow-mpv.sock"
+        self.mpv_pid = mpv_pid or Path(tempfile.gettempdir()) / "spaceflow-mpv.pid"
 
     def play_url(self, url: str) -> None:
         kind = detect_platform()
@@ -36,7 +38,8 @@ class SystemAudioPlayer:
                             mpv,
                             "--no-video",
                             "--really-quiet",
-                            "--volume=70",
+                            "--ao=opensles",
+                            "--volume=100",
                             f"--input-ipc-server={self.mpv_socket}",
                             url,
                         ],
@@ -46,6 +49,7 @@ class SystemAudioPlayer:
                     )
                     if not self._wait_for_mpv(process):
                         raise PlaybackFailed("MPV no pudo iniciar la reproducción.")
+                    self.mpv_pid.write_text(str(process.pid), encoding="ascii")
                     return
                 command = shutil.which("termux-open-url") or shutil.which("termux-open")
                 if command:
@@ -69,24 +73,49 @@ class SystemAudioPlayer:
         raise PlaybackFailed("No encontré un reproductor para abrir el audio en streaming.")
 
     def pause(self) -> None:
-        self._mpv_command(["set_property", "pause", True])
+        self._mpv_command(["set_property", "pause", True], signal.SIGSTOP)
 
     def resume(self) -> None:
-        self._mpv_command(["set_property", "pause", False])
+        if detect_platform() != "termux":
+            raise PlaybackFailed(
+                "Los controles integrados están disponibles en Termux; usa los controles del sistema."
+            )
+        resumed = self._signal_mpv(signal.SIGCONT)
+        try:
+            self._send_mpv_command(["set_property", "pause", False])
+            resumed = True
+        except PlaybackFailed:
+            if not resumed:
+                raise
 
     def stop(self) -> None:
-        self._mpv_command(["quit"])
+        if detect_platform() != "termux":
+            raise PlaybackFailed(
+                "Los controles integrados están disponibles en Termux; usa los controles del sistema."
+            )
+        stopped = False
+        try:
+            self._send_mpv_command(["quit"])
+            stopped = True
+        except PlaybackFailed:
+            pass
+        if self._signal_mpv(signal.SIGTERM):
+            stopped = True
+        if not stopped:
+            raise PlaybackFailed(
+                "No hay una reproducción activa. Elige primero Escuchar ahora."
+            )
+        self._remove_pid_file()
 
     def change_volume(self, delta: int) -> None:
         self._mpv_command(["add", "volume", int(delta)])
 
     def _stop_existing_mpv(self) -> None:
-        if self.mpv_socket.exists():
-            try:
-                self._send_mpv_command(["quit"])
-                time.sleep(0.1)
-            except PlaybackFailed:
-                pass
+        try:
+            self.stop()
+            time.sleep(0.1)
+        except PlaybackFailed:
+            pass
 
     def _wait_for_mpv(self, process: subprocess.Popen) -> bool:
         for _ in range(20):
@@ -97,12 +126,36 @@ class SystemAudioPlayer:
             time.sleep(0.05)
         return self.mpv_socket.exists()
 
-    def _mpv_command(self, command: list[object]) -> None:
+    def _mpv_command(self, command: list[object], fallback_signal: int | None = None) -> None:
         if detect_platform() != "termux":
             raise PlaybackFailed(
                 "Los controles integrados están disponibles en Termux; usa los controles del sistema."
             )
-        self._send_mpv_command(command)
+        try:
+            self._send_mpv_command(command)
+        except PlaybackFailed:
+            if fallback_signal is None or not self._signal_mpv(fallback_signal):
+                raise
+
+    def _signal_mpv(self, action: int) -> bool:
+        try:
+            pid = int(self.mpv_pid.read_text(encoding="ascii").strip())
+            if not self.mpv_socket.exists():
+                command_line = Path(f"/proc/{pid}/cmdline").read_bytes()
+                if b"mpv" not in command_line.lower():
+                    self._remove_pid_file()
+                    return False
+            os.kill(pid, action)
+            return True
+        except (OSError, ValueError):
+            self._remove_pid_file()
+            return False
+
+    def _remove_pid_file(self) -> None:
+        try:
+            self.mpv_pid.unlink()
+        except FileNotFoundError:
+            pass
 
     def _send_mpv_command(self, command: list[object]) -> None:
         if not self.mpv_socket.exists():

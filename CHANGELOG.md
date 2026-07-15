@@ -2,6 +2,13 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.9] - 2026-07-15
+
+- Controles de audio visibles directamente en el menú principal.
+- Detención, pausa y continuación con respaldo mediante el proceso de MPV.
+- Salida OpenSL ES explícita para que los botones de volumen de Android controlen el audio.
+- Comprobación de nuevas versiones cada vez que se abre SpaceFlow.
+
 ## [0.1.8] - 2026-07-15
 
 - Reproducción de Termux en segundo plano para devolver inmediatamente el menú.

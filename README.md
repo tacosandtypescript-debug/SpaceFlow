@@ -69,9 +69,13 @@ disponible con `--format mp3`.
 
 En a-Shell, `play` abre el stream en el reproductor de iOS. En Termux reproduce
 el HLS mediante `mpv` y la salida OpenSL ES de Android. El menú incluye un panel
-para pausar, continuar, detener y cambiar el volumen. iSH no expone una salida
+visible para pausar, continuar, detener y cambiar el volumen. Los botones físicos
+de volumen del teléfono controlan el canal multimedia de Android. iSH no expone una salida
 de audio del sistema: allí puedes consultar y descargar, y después abrir el
 archivo desde Archivos, o usar a-Shell para escuchar directamente.
+
+SpaceFlow consulta GitHub cada vez que se abre y muestra un aviso cuando existe
+una versión más reciente.
 
 Al actualizar desde el menú en a-Shell, iSH o Termux, SpaceFlow vuelve a ejecutar
 el instalador incremental. Así se añaden automáticamente herramientas nuevas que

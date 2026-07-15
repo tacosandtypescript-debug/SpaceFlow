@@ -80,7 +80,7 @@ def _asset(container: Container, query: str):
 
 
 def _notice_update(container: Container) -> None:
-    release = container.updates.check(force=False)
+    release = container.updates.check(force=True)
     if release:
         print(
             f"Aviso: SpaceFlow {release.version} está disponible. "
