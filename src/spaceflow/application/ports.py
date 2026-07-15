@@ -8,7 +8,7 @@ from typing import Protocol
 from spaceflow.domain.models import AudioAsset, Space
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class ReleaseInfo:
     version: str
     asset_url: str

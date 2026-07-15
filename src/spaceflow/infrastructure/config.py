@@ -41,7 +41,7 @@ def default_library_dir() -> Path:
     return Path.home() / "SpaceFlow"
 
 
-@dataclass(slots=True)
+@dataclass
 class AppConfig:
     library_dir: str
     cookies_file: str

@@ -15,7 +15,7 @@ from spaceflow.infrastructure.updater import GitHubReleaseRepository
 from spaceflow.infrastructure.yt_dlp_provider import YtDlpSpaceProvider
 
 
-@dataclass(slots=True)
+@dataclass
 class Container:
     config_store: ConfigStore
     config: AppConfig

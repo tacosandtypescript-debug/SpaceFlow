@@ -17,7 +17,7 @@ if command -v apk >/dev/null 2>&1 && [ -f /etc/alpine-release ]; then
     VENV_DIR="$APP_DIR/venv"
     python3 -m virtualenv "$VENV_DIR"
     PYTHON="$VENV_DIR/bin/python"
-    "$PYTHON" -m pip install --upgrade yt-dlp
+    "$PYTHON" -m pip install --upgrade pip yt-dlp
 elif [ -n "${TERMUX_VERSION:-}" ] || echo "${PREFIX:-}" | grep -q 'com.termux'; then
     PLATFORM="termux"
     pkg install -y python ffmpeg curl

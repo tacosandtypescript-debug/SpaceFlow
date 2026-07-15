@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from spaceflow.application.ports import ReleaseInfo, UpdateRepository, UpdateStateStore
 
 
-@dataclass(slots=True)
+@dataclass
 class UpdateService:
     repository: UpdateRepository
     state_store: UpdateStateStore

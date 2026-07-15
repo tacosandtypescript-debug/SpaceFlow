@@ -20,7 +20,7 @@ class ParticipantRole(str, Enum):
     SPEAKER = "speaker"
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class SpaceId:
     value: str
 
@@ -32,7 +32,7 @@ class SpaceId:
         return self.value
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class Participant:
     id: str
     name: str
@@ -44,7 +44,7 @@ class Participant:
         return f"{self.name} (@{self.username})" if self.username else self.name
 
 
-@dataclass(slots=True)
+@dataclass
 class Space:
     id: SpaceId
     source_url: str
@@ -72,7 +72,7 @@ class Space:
         return data
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class AudioAsset:
     space_id: SpaceId
     path: Path
