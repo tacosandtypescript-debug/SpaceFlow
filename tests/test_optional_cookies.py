@@ -3,8 +3,33 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from spaceflow.infrastructure.yt_dlp_provider import YtDlpSpaceProvider
+
+
+class FakeYoutubeDL:
+    seen_options = []
+
+    def __init__(self, options):
+        self.options = options
+        self.seen_options.append(options)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, traceback):
+        return False
+
+    def extract_info(self, url, download=False):
+        return {"id": "AbC123", "title": "Space público", "webpage_url": url}
+
+    def download(self, urls):
+        return 0
+
+
+class FakeYtDlp:
+    YoutubeDL = FakeYoutubeDL
 
 
 class OptionalCookiesTests(unittest.TestCase):
@@ -19,6 +44,20 @@ class OptionalCookiesTests(unittest.TestCase):
             path.write_text("# Netscape HTTP Cookie File\n", encoding="utf-8")
             provider = YtDlpSpaceProvider(path)
             self.assertEqual(provider._cookie_options(), {"cookiefile": str(path)})
+
+    def test_python_deprecation_warnings_are_suppressed(self):
+        FakeYoutubeDL.seen_options.clear()
+        provider = YtDlpSpaceProvider(Path("missing-cookies.txt"))
+        with patch(
+            "spaceflow.infrastructure.yt_dlp_provider._load_yt_dlp",
+            return_value=FakeYtDlp,
+        ):
+            provider.get_info("https://x.com/i/spaces/AbC123")
+            provider._run_download(
+                "https://x.com/i/spaces/AbC123", Path("audio"), "m4a", False
+            )
+        self.assertEqual(len(FakeYoutubeDL.seen_options), 2)
+        self.assertTrue(all(item["no_warnings"] for item in FakeYoutubeDL.seen_options))
 
 
 if __name__ == "__main__":

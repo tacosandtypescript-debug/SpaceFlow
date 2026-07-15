@@ -37,7 +37,7 @@ class YtDlpSpaceProvider:
         yt_dlp = _load_yt_dlp()
         options = {
             "quiet": True,
-            "no_warnings": self.quiet,
+            "no_warnings": True,
             "skip_download": True,
             "noplaylist": True,
             **self._cookie_options(),
@@ -98,6 +98,7 @@ class YtDlpSpaceProvider:
             "fragment_retries": 10,
             "concurrent_fragment_downloads": 1,
             "live_from_start": live_from_start,
+            "no_warnings": True,
             **self._cookie_options(),
             "postprocessors": [
                 {

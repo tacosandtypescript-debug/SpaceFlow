@@ -7,7 +7,17 @@ PYTHON=""
 
 if command -v apk >/dev/null 2>&1 && [ -f /etc/alpine-release ]; then
     PLATFORM="ish"
-    apk add --no-cache python3 py3-pip py3-virtualenv ffmpeg curl ca-certificates
+    MISSING_PACKAGES=""
+    for package in python3 py3-pip py3-virtualenv ffmpeg curl ca-certificates; do
+        if ! apk info -e "$package" >/dev/null 2>&1; then
+            MISSING_PACKAGES="$MISSING_PACKAGES $package"
+        fi
+    done
+    if [ -n "$MISSING_PACKAGES" ]; then
+        apk add --no-cache $MISSING_PACKAGES
+    else
+        echo "Dependencias de iSH ya instaladas; se omite apk."
+    fi
     if [ "$(id -u)" = "0" ]; then
         BIN_DIR="/usr/local/bin"
     else
@@ -15,17 +25,32 @@ if command -v apk >/dev/null 2>&1 && [ -f /etc/alpine-release ]; then
     fi
     mkdir -p "$APP_DIR" "$BIN_DIR"
     VENV_DIR="$APP_DIR/venv"
-    python3 -m virtualenv "$VENV_DIR"
+    if [ ! -x "$VENV_DIR/bin/python" ]; then
+        python3 -m virtualenv "$VENV_DIR"
+    else
+        echo "Entorno Python de SpaceFlow ya instalado."
+    fi
     PYTHON="$VENV_DIR/bin/python"
-    "$PYTHON" -m pip install --upgrade pip yt-dlp
 elif [ -n "${TERMUX_VERSION:-}" ] || echo "${PREFIX:-}" | grep -q 'com.termux'; then
     PLATFORM="termux"
-    pkg install -y python ffmpeg curl
+    MISSING_PACKAGES=""
+    command -v python >/dev/null 2>&1 || MISSING_PACKAGES="$MISSING_PACKAGES python"
+    command -v ffmpeg >/dev/null 2>&1 || MISSING_PACKAGES="$MISSING_PACKAGES ffmpeg"
+    command -v curl >/dev/null 2>&1 || MISSING_PACKAGES="$MISSING_PACKAGES curl"
+    if [ -n "$MISSING_PACKAGES" ]; then
+        pkg install -y $MISSING_PACKAGES
+    else
+        echo "Dependencias de Termux ya instaladas; se omite pkg."
+    fi
     BIN_DIR="$HOME/.local/bin"
 elif { [ -n "${APPNAME:-}" ] && echo "$APPNAME" | grep -qi 'a-shell'; } || \
      { command -v pkg >/dev/null 2>&1 && [ -d "$HOME/Documents" ]; }; then
     PLATFORM="ashell"
-    pkg install ffmpeg
+    if ! command -v ffmpeg >/dev/null 2>&1; then
+        pkg install ffmpeg
+    else
+        echo "FFmpeg ya está instalado; se omite pkg."
+    fi
     BIN_DIR="$HOME/Documents/bin"
     APP_DIR="${SPACEFLOW_HOME:-$HOME/Documents/.spaceflow/app}"
 else
@@ -41,8 +66,15 @@ if [ -z "$PYTHON" ]; then
     exit 1
 fi
 
-if [ "$PLATFORM" != "ish" ]; then
-    "$PYTHON" -m pip install --user --upgrade yt-dlp
+if [ "${SPACEFLOW_UPDATE_DEPS:-0}" = "1" ] || \
+   ! "$PYTHON" -c 'import yt_dlp' >/dev/null 2>&1; then
+    if [ "$PLATFORM" = "ish" ]; then
+        "$PYTHON" -m pip install --upgrade pip yt-dlp
+    else
+        "$PYTHON" -m pip install --user --upgrade yt-dlp
+    fi
+else
+    echo "yt-dlp ya está instalado; se omite pip."
 fi
 mkdir -p "$APP_DIR" "$BIN_DIR"
 

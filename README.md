@@ -20,6 +20,10 @@ dependencias con `apk` y aísla Python en un entorno propio. En Termux conviene
 ejecutar antes `termux-setup-storage`. En a-Shell usa `~/Documents/bin`, una
 ruta apropiada para comandos personales.
 
+Las actualizaciones son incrementales: si Python, FFmpeg, curl y `yt-dlp` ya
+están disponibles, el instalador no vuelve a instalarlos. Para actualizar
+también las dependencias, usa `SPACEFLOW_UPDATE_DEPS=1` antes del comando.
+
 ### Windows PowerShell
 
 ```powershell
