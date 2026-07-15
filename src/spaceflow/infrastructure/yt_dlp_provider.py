@@ -36,11 +36,11 @@ class YtDlpSpaceProvider:
     def get_info(self, url: str) -> Space:
         yt_dlp = _load_yt_dlp()
         options = {
-            "cookiefile": str(self.cookies_file),
             "quiet": True,
             "no_warnings": self.quiet,
             "skip_download": True,
             "noplaylist": True,
+            **self._cookie_options(),
         }
         try:
             with yt_dlp.YoutubeDL(options) as ydl:
@@ -90,7 +90,6 @@ class YtDlpSpaceProvider:
     ) -> None:
         yt_dlp = _load_yt_dlp()
         options: dict[str, Any] = {
-            "cookiefile": str(self.cookies_file),
             "format": "bestaudio/best",
             "outtmpl": str(stem) + ".%(ext)s",
             "noplaylist": True,
@@ -99,6 +98,7 @@ class YtDlpSpaceProvider:
             "fragment_retries": 10,
             "concurrent_fragment_downloads": 1,
             "live_from_start": live_from_start,
+            **self._cookie_options(),
             "postprocessors": [
                 {
                     "key": "FFmpegExtractAudio",
@@ -182,12 +182,21 @@ class YtDlpSpaceProvider:
         except (TypeError, ValueError):
             return None
 
-    @staticmethod
-    def _friendly_error(error: Exception) -> str:
+    def _cookie_options(self) -> dict[str, str]:
+        if self.cookies_file.is_file():
+            return {"cookiefile": str(self.cookies_file)}
+        return {}
+
+    def _friendly_error(self, error: Exception) -> str:
         message = str(error).replace("ERROR: ", "").strip()
         lowered = message.lower()
         if "cookies" in lowered or "login" in lowered or "unauthorized" in lowered:
-            return "X rechazó las cookies. Expórtalas otra vez e impórtalas con SpaceFlow."
+            if self.cookies_file.is_file():
+                return "X rechazó las cookies. Expórtalas otra vez e impórtalas con SpaceFlow."
+            return (
+                "Este Space requiere iniciar sesión en X. Importa cookies con: "
+                "spaceflow auth import /ruta/cookies.txt"
+            )
         if "ffmpeg" in lowered:
             return "FFmpeg no está instalado o no funciona. Ejecuta el instalador de SpaceFlow otra vez."
         if "not available" in lowered or "no longer available" in lowered:

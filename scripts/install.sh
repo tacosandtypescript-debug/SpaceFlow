@@ -76,4 +76,5 @@ case ":${PATH}:" in
 esac
 
 echo "SpaceFlow instalado para $PLATFORM."
-echo "Ejecuta: spaceflow auth import /ruta/cookies.txt"
+echo "Ejecuta: spaceflow"
+echo "Las cookies son opcionales y solo hacen falta si X exige iniciar sesión."

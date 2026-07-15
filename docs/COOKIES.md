@@ -1,7 +1,8 @@
 # Exportar cookies de X
 
-SpaceFlow recibe un archivo Netscape `cookies.txt`. Debe proceder de una sesión
-propia y se usa localmente para que X entregue el audio y los metadatos.
+Las cookies son opcionales para los Spaces públicos. Si X exige iniciar sesión
+para un Space concreto, SpaceFlow recibe un archivo Netscape `cookies.txt` de
+una sesión propia y lo usa localmente para obtener el audio y los metadatos.
 
 1. Exporta únicamente las cookies de `x.com`/`twitter.com` con una herramienta
    de confianza.

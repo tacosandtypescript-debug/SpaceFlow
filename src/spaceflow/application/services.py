@@ -4,7 +4,6 @@ from pathlib import Path
 
 from spaceflow.application.ports import (
     AudioPlayer,
-    CookieStore,
     LibraryRepository,
     SpaceMediaProvider,
     SpaceUrlResolver,
@@ -19,16 +18,13 @@ class SpaceFlowService:
         media: SpaceMediaProvider,
         library: LibraryRepository,
         player: AudioPlayer,
-        cookies: CookieStore,
     ) -> None:
         self.resolver = resolver
         self.media = media
         self.library = library
         self.player = player
-        self.cookies = cookies
 
     def info(self, url: str) -> Space:
-        self.cookies.require()
         return self.media.get_info(self.resolver.resolve(url))
 
     def download(
@@ -38,7 +34,6 @@ class SpaceFlowService:
         output_dir: Path | None = None,
         live_from_start: bool = True,
     ) -> tuple[AudioAsset, bool]:
-        self.cookies.require()
         space = self.media.get_info(self.resolver.resolve(url))
         stem = self.library.destination_stem(space)
         if output_dir:

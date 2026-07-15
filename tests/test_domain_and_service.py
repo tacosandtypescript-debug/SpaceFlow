@@ -48,19 +48,12 @@ class Player:
         self.played = path
 
 
-class Cookies:
-    path = Path("cookies.txt")
-
-    def require(self):
-        return self.path
-
-
 class ServiceTests(unittest.TestCase):
     def test_download_and_play_are_orchestrated_without_infrastructure_details(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             player = Player()
-            service = SpaceFlowService(Resolver(), Media(root), Library(root), player, Cookies())
+            service = SpaceFlowService(Resolver(), Media(root), Library(root), player)
             asset = service.play_url("https://x.com/user/status/123")
             self.assertEqual(asset.space_id.value, "AbC123")
             self.assertEqual(player.played, asset.path)

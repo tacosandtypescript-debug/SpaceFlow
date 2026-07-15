@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.3] - 2026-07-15
+
+- Los Spaces públicos ya no exigen cookies antes de consultar, escuchar o descargar.
+- Las cookies solo se envían a X cuando el usuario las ha importado.
+- Mensaje específico cuando un Space concreto sí requiere iniciar sesión.
+
 ## [0.1.2] - 2026-07-15
 
 - Compatibilidad con Python 3.9, incluido en versiones antiguas de Alpine/iSH.

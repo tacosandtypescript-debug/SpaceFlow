@@ -22,7 +22,7 @@ def run_menu(container: Container) -> int:
         print("3. Descargar")
         print("4. Grabar un Space en vivo")
         print("5. Ver biblioteca")
-        print("6. Importar cookies de X")
+        print("6. Importar cookies de X (opcional)")
         print("7. Buscar actualizaciones")
         print("8. Configuración")
         print("0. Salir")

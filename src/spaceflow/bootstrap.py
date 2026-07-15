@@ -33,7 +33,7 @@ def build_container(data_dir: Path | None = None) -> Container:
     resolver = XSpaceUrlResolver(cookies.path)
     media = YtDlpSpaceProvider(cookies.path)
     player = SystemAudioPlayer()
-    service = SpaceFlowService(resolver, media, library, player, cookies)
+    service = SpaceFlowService(resolver, media, library, player)
     releases = GitHubReleaseRepository(config.update_repo, __version__)
     updates = UpdateService(releases, config_store)
     return Container(config_store, config, cookies, library, service, updates)

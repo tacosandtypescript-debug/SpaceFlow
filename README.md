@@ -34,7 +34,8 @@ El instalador descarga Python y FFmpeg con `winget` cuando faltan, instala
 
 ## Primer inicio
 
-SpaceFlow necesita cookies de una sesión de X en formato Netscape:
+Los Spaces públicos se pueden usar sin cookies. Si X exige iniciar sesión para
+un Space concreto, importa cookies de una sesión propia en formato Netscape:
 
 ```sh
 spaceflow auth import /ruta/al/cookies.txt
