@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes de SpaceFlow se documentan aquí.
 
+## [0.1.10] - 2026-07-15
+
+- Configuración automática de `volume-keys = volume` en Termux al escuchar.
+- Recarga inmediata de las preferencias para que los botones físicos controlen Android.
+- Se conserva el resto de la configuración personal de `termux.properties`.
+
 ## [0.1.9] - 2026-07-15
 
 - Controles de audio visibles directamente en el menú principal.

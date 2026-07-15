@@ -19,7 +19,9 @@ class PlayerTests(unittest.TestCase):
                 "spaceflow.infrastructure.player.shutil.which", return_value="/bin/mpv"
             ), patch(
                 "spaceflow.infrastructure.player.subprocess.Popen"
-            ) as popen, patch.object(player, "_wait_for_mpv", return_value=True):
+            ) as popen, patch.object(
+                player, "_wait_for_mpv", return_value=True
+            ), patch.object(player, "_enable_android_volume_keys") as volume_keys:
                 player.play_url("https://media.example/space.m3u8")
             args = popen.call_args.args[0]
             self.assertIn("--input-ipc-server=" + str(player.mpv_socket), args)
@@ -27,6 +29,22 @@ class PlayerTests(unittest.TestCase):
             self.assertIn("--volume=100", args)
             self.assertEqual(args[-1], "https://media.example/space.m3u8")
             self.assertTrue(popen.call_args.kwargs["start_new_session"])
+            volume_keys.assert_called_once_with()
+
+    def test_termux_volume_buttons_are_restored_to_android(self):
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            properties = home / ".termux" / "termux.properties"
+            properties.parent.mkdir()
+            properties.write_text("volume-keys = extra\nfullscreen = true\n", encoding="utf-8")
+            player = SystemAudioPlayer()
+            with patch.dict("os.environ", {"HOME": str(home)}), patch(
+                "spaceflow.infrastructure.player.shutil.which",
+                return_value="/bin/termux-reload-settings",
+            ), patch("spaceflow.infrastructure.player.subprocess.run") as run:
+                player._enable_android_volume_keys()
+            self.assertIn("volume-keys = volume", properties.read_text(encoding="utf-8"))
+            run.assert_called_once()
 
     def test_termux_volume_uses_mpv_ipc(self):
         player = SystemAudioPlayer(Path("/tmp/spaceflow-test.sock"))

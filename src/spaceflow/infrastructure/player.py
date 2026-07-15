@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import signal
 import shutil
 import socket
@@ -28,6 +29,7 @@ class SystemAudioPlayer:
             if kind == "termux":
                 mpv = shutil.which("mpv")
                 if mpv:
+                    self._enable_android_volume_keys()
                     self._stop_existing_mpv()
                     try:
                         self.mpv_socket.unlink()
@@ -71,6 +73,35 @@ class SystemAudioPlayer:
         except (OSError, subprocess.SubprocessError) as exc:
             raise PlaybackFailed(f"No se pudo abrir el reproductor: {exc}") from exc
         raise PlaybackFailed("No encontré un reproductor para abrir el audio en streaming.")
+
+    def _enable_android_volume_keys(self) -> None:
+        home = os.environ.get("HOME")
+        if not home:
+            return
+        properties = Path(home) / ".termux" / "termux.properties"
+        try:
+            properties.parent.mkdir(parents=True, exist_ok=True)
+            text = properties.read_text(encoding="utf-8") if properties.exists() else ""
+            setting = "volume-keys = volume"
+            pattern = r"(?m)^[ \t]*volume-keys[ \t]*=.*$"
+            if re.search(pattern, text):
+                updated = re.sub(pattern, setting, text)
+            else:
+                updated = text.rstrip() + ("\n" if text.strip() else "") + setting + "\n"
+            if updated != text:
+                properties.write_text(updated, encoding="utf-8")
+                reload_settings = shutil.which("termux-reload-settings")
+                if reload_settings:
+                    subprocess.run(
+                        [reload_settings],
+                        check=False,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
+        except OSError:
+            # El control interno del menú sigue disponible si Termux no permite
+            # cambiar su configuración global.
+            return
 
     def pause(self) -> None:
         self._mpv_command(["set_property", "pause", True], signal.SIGSTOP)
